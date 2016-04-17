@@ -1,8 +1,15 @@
 package hr.lowcostflights.integration.amadeus.domain;
 
+import org.springframework.core.style.ToStringCreator;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Price {
 	
+	@JsonProperty("total_fare")
 	private String totalFare;
+	
+	@JsonProperty("tax")
 	private String tax;
 	
 	public String getTotalFare() {
@@ -18,4 +25,11 @@ public class Price {
 		this.tax = tax;
 	}
 	
+	@Override
+	public String toString() {
+		ToStringCreator builder = new ToStringCreator(this);
+		builder.append("totalFare", totalFare);
+		builder.append("tax", tax);
+		return builder.toString();
+	}
 }

@@ -2,9 +2,16 @@ package hr.lowcostflights.integration.amadeus.domain;
 
 import java.util.List;
 
+import org.springframework.core.style.ToStringCreator;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Result {
 
+	@JsonProperty("itineraries")
 	private List<Itinerary> itineraries;
+	
+	@JsonProperty("fare")
 	private Fare fare;
 	
 	public List<Itinerary> getItineraries() {
@@ -19,4 +26,14 @@ public class Result {
 	public void setFare(Fare fare) {
 		this.fare = fare;
 	}
+	
+	@Override
+	public String toString() {
+		ToStringCreator builder = new ToStringCreator(this);
+		builder.append("itineraries", itineraries);
+		builder.append("fare", fare);
+		return builder.toString();
+	}
+	
+	
 }

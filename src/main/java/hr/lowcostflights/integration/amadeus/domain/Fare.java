@@ -1,11 +1,24 @@
 package hr.lowcostflights.integration.amadeus.domain;
 
+import org.springframework.core.style.ToStringCreator;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Fare {
 	
+	@JsonProperty("total_price")
 	private String totalPrice;
+	
+	@JsonProperty("price_per_adult")
 	private Price pricePerAdult;
+	
+	@JsonProperty("price_per_child")
 	private Price pricePerChild;
+	
+	@JsonProperty("price_per_infant")
 	private Price pricePerInfant;
+	
+	@JsonProperty("restrictions")
 	private Restrictions restrictions;
 	
 	public String getTotalPrice() {
@@ -38,5 +51,17 @@ public class Fare {
 	public void setRestrictions(Restrictions restrictions) {
 		this.restrictions = restrictions;
 	}
+	
+	@Override
+	public String toString() {
+		ToStringCreator builder = new ToStringCreator(this);
+		builder.append("totalPrice", totalPrice);
+		builder.append("pricePerAdult", pricePerAdult);
+		builder.append("pricePerChild", pricePerChild);
+		builder.append("pricePerInfant", pricePerInfant);
+		builder.append("restrictions", restrictions);
+		return builder.toString();
+	}
+	
 	
 }

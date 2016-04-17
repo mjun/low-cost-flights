@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -57,8 +58,10 @@ public class FlightLowFareSearchClient {
 		if (numberOfResults != null)	urlParameters.add("number_of_results", numberOfResults.toString());
 
 		UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(resourceUrl).queryParams(urlParameters).build();
-		     		
+		
 		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
+		restTemplate.setErrorHandler(new AmadeusResponseErrorHandler());
 		FlightLowFareSearchResults results = restTemplate.getForObject(uriComponents.toString(), FlightLowFareSearchResults.class);
 		return results;
 	}
