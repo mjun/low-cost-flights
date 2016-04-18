@@ -1,0 +1,85 @@
+package hr.lowcostflights.service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import hr.lowcostflights.domain.Airport;
+import hr.lowcostflights.domain.Flight;
+import hr.lowcostflights.domain.Search;
+import hr.lowcostflights.integration.amadeus.client.FlightLowFareSearchClient;
+import hr.lowcostflights.integration.amadeus.domain.FlightLowFareSearchResults;
+import hr.lowcostflights.integration.amadeus.domain.Itinerary;
+import hr.lowcostflights.integration.amadeus.domain.Result;
+import hr.lowcostflights.repository.SearchRepository;
+
+@Service
+public class SearchServiceImpl implements SearchService {
+
+	@Autowired
+	private SearchRepository searchRepository;
+
+	@Autowired
+	private FlightLowFareSearchClient amadeusflightLowFareSearchClient;
+
+	@Autowired
+	private FlightService flightService;
+
+	@Override
+	@Transactional
+	public List<Flight> findFlights(Airport origin, Airport destination, LocalDate departureDate, LocalDate returnDate,
+			Integer adults, Integer children, Integer infants, String currency) {
+
+		// see if there already was a search with these parameters
+		Search search = searchRepository
+				.findOneByOriginAndDestinationAndDepartureDateAndReturnDateAndAdultsAndChildrenAndInfantsAndCurrency(
+						origin, destination, departureDate, returnDate, adults, children, infants, currency);
+
+		// this is a brand new search
+		if (search == null) {
+			// create new search object
+			search = new Search(origin, destination, departureDate, returnDate, adults, children, infants, currency,
+					null);
+
+			// fetch flights from Amadeus API
+			FlightLowFareSearchResults amadeusResults = amadeusflightLowFareSearchClient.flightLowFareSearch(
+					origin.getIataCode(), destination.getIataCode(), departureDate, returnDate, null, null, adults,
+					children, infants, null, null, null, null, currency, null, null);
+
+			if (amadeusResults != null) {
+				List<Flight> flights = new ArrayList<Flight>();
+
+				for (Result amadeusFlight : amadeusResults.getResults()) {
+					for (Itinerary amadeusItinerary : amadeusFlight.getItineraries()) {
+						Flight flight = flightService.findSpecificFlight(origin, destination,
+								amadeusItinerary.getOutbound().getFlights().get(0).getDepartsAt(),
+								amadeusItinerary.getInbound().getFlights().get(0).getDepartsAt(),
+								amadeusItinerary.getOutbound().getFlights().size() - 1,
+								amadeusItinerary.getInbound().getFlights().size() - 1, adults, children, infants,
+								currency, Integer.parseInt(amadeusFlight.getFare().getTotalPrice()));
+						if (flight == null) {
+							flight = new Flight(origin, destination,
+									amadeusItinerary.getOutbound().getFlights().get(0).getDepartsAt(),
+									amadeusItinerary.getInbound().getFlights().get(0).getDepartsAt(),
+									amadeusItinerary.getOutbound().getFlights().size() - 1,
+									amadeusItinerary.getInbound().getFlights().size() - 1, adults, children, infants,
+									currency, Integer.parseInt(amadeusFlight.getFare().getTotalPrice()));
+						}
+						flights.add(flight);
+					}
+				}
+				search.setFlights(flights);
+			}
+			searchRepository.save(search);
+		}
+
+		// return flights for this search
+		return search.getFlights();
+	}
+
+}

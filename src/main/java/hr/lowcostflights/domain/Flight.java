@@ -14,8 +14,9 @@ import javax.persistence.UniqueConstraint;
 import org.springframework.core.style.ToStringCreator;
 
 @Entity
-@Table(name = "flights", uniqueConstraints = { @UniqueConstraint(columnNames = { "origin_id", "destination_id", "departure",
-		"arrival", "outbound_stops", "inbound_stops", "adults", "children", "infants", "currency", "total_price" }) })
+@Table(name = "flights", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "origin_id", "destination_id", "departure_datetime", "return_datetime",
+				"outbound_stops", "inbound_stops", "adults", "children", "infants", "currency", "total_price" }) })
 public class Flight {
 
 	@Id
@@ -28,11 +29,11 @@ public class Flight {
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Airport destination;
 
-	@Column(name = "departure")
-	private LocalDateTime departure;
+	@Column(name = "departure_datetime")
+	private LocalDateTime departureDateTime;
 
-	@Column(name = "arrival")
-	private LocalDateTime arrival;
+	@Column(name = "return_datetime")
+	private LocalDateTime returnDateTime;
 
 	@Column(name = "outbound_stops")
 	private Integer outboundStops;
@@ -55,16 +56,17 @@ public class Flight {
 	@Column(name = "total_price")
 	private Integer totalPrice;
 
-	protected Flight() {}
-	
-	public Flight(Airport origin, Airport destination, LocalDateTime departure, LocalDateTime arrival,
+	protected Flight() {
+	}
+
+	public Flight(Airport origin, Airport destination, LocalDateTime departureDateTime, LocalDateTime returnDateTime,
 			Integer outboundStops, Integer inboundStops, Integer adults, Integer children, Integer infants,
 			String currency, Integer totalPrice) {
 		super();
 		this.origin = origin;
 		this.destination = destination;
-		this.departure = departure;
-		this.arrival = arrival;
+		this.departureDateTime = departureDateTime;
+		this.returnDateTime = returnDateTime;
 		this.outboundStops = outboundStops;
 		this.inboundStops = inboundStops;
 		this.adults = adults;
@@ -98,20 +100,20 @@ public class Flight {
 		this.destination = destination;
 	}
 
-	public LocalDateTime getDeparture() {
-		return departure;
+	public LocalDateTime getDepartureDateTime() {
+		return departureDateTime;
 	}
 
-	public void setDeparture(LocalDateTime departure) {
-		this.departure = departure;
+	public void setDepartureDateTime(LocalDateTime departureDateTime) {
+		this.departureDateTime = departureDateTime;
 	}
 
-	public LocalDateTime getArrival() {
-		return arrival;
+	public LocalDateTime getReturnDateTime() {
+		return returnDateTime;
 	}
 
-	public void setArrival(LocalDateTime arrival) {
-		this.arrival = arrival;
+	public void setArrival(LocalDateTime returnDateTime) {
+		this.returnDateTime = returnDateTime;
 	}
 
 	public Integer getOutboundStops() {
@@ -176,8 +178,8 @@ public class Flight {
 		builder.append("id", id);
 		builder.append("origin", origin);
 		builder.append("destination", destination);
-		builder.append("departure", departure);
-		builder.append("arrival", arrival);
+		builder.append("departureDateTime", departureDateTime);
+		builder.append("returnDateTime", returnDateTime);
 		builder.append("outboundStops", outboundStops);
 		builder.append("inboundStops", inboundStops);
 		builder.append("adults", adults);

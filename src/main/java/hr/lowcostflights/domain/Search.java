@@ -19,7 +19,7 @@ import org.springframework.core.style.ToStringCreator;
 
 @Entity
 @Table(name = "searches", uniqueConstraints = { @UniqueConstraint(columnNames = { "origin_id", "destination_id",
-		"departure", "arrival", "adults", "children", "infants", "currency" }) })
+		"departure_date", "return_date", "adults", "children", "infants", "currency" }) })
 public class Search {
 
 	@Id
@@ -32,11 +32,11 @@ public class Search {
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Airport destination;
 
-	@Column(name = "departure")
-	private LocalDate departure;
+	@Column(name = "departure_date")
+	private LocalDate departureDate;
 
-	@Column(name = "arrival")
-	private LocalDate arrival;
+	@Column(name = "return_date")
+	private LocalDate returnDate;
 
 	@Column(name = "adults")
 	private Integer adults;
@@ -54,15 +54,16 @@ public class Search {
 	@JoinTable(name = "flight_search", joinColumns = @JoinColumn(name = "search_id"), inverseJoinColumns = @JoinColumn(name = "flight_id"))
 	private List<Flight> flights;
 
-	protected Search() {}
-	
-	public Search(Airport origin, Airport destination, LocalDate departure, LocalDate arrival, Integer adults,
+	protected Search() {
+	}
+
+	public Search(Airport origin, Airport destination, LocalDate departureDate, LocalDate returnDate, Integer adults,
 			Integer children, Integer infants, String currency, List<Flight> flights) {
 		super();
 		this.origin = origin;
 		this.destination = destination;
-		this.departure = departure;
-		this.arrival = arrival;
+		this.departureDate = departureDate;
+		this.returnDate = returnDate;
 		this.adults = adults;
 		this.children = children;
 		this.infants = infants;
@@ -94,20 +95,20 @@ public class Search {
 		this.destination = destination;
 	}
 
-	public LocalDate getDeparture() {
-		return departure;
+	public LocalDate getDepartureDate() {
+		return departureDate;
 	}
 
-	public void setDeparture(LocalDate departure) {
-		this.departure = departure;
+	public void setDepartureDate(LocalDate departureDate) {
+		this.departureDate = departureDate;
 	}
 
-	public LocalDate getArrival() {
-		return arrival;
+	public LocalDate getReturnDate() {
+		return returnDate;
 	}
 
-	public void setArrival(LocalDate arrival) {
-		this.arrival = arrival;
+	public void setReturnDate(LocalDate returnDate) {
+		this.returnDate = returnDate;
 	}
 
 	public Integer getAdults() {
@@ -156,8 +157,8 @@ public class Search {
 		builder.append("id", id);
 		builder.append("origin", origin);
 		builder.append("destination", destination);
-		builder.append("departure", departure);
-		builder.append("arrival", arrival);
+		builder.append("departureDate", departureDate);
+		builder.append("returnDate", returnDate);
 		builder.append("adults", adults);
 		builder.append("children", children);
 		builder.append("infants", infants);
