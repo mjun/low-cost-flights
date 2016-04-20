@@ -10,6 +10,12 @@ import org.springframework.core.style.ToStringCreator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Represents a single airport.
+ * 
+ * @author matko
+ *
+ */
 @Entity
 @Table(name = "airports")
 public class Airport {

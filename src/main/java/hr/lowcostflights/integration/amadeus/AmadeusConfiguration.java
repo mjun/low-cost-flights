@@ -5,8 +5,14 @@ import javax.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * Provides externalized configuration for Amadeus client methods.
+ * 
+ * @author matko
+ *
+ */
 @Component
-@ConfigurationProperties(locations="classpath:amadeus.properties", ignoreUnknownFields=false, prefix="amadeus")
+@ConfigurationProperties(locations = "classpath:amadeus.properties", ignoreUnknownFields = false, prefix = "amadeus")
 public class AmadeusConfiguration {
 
 	@NotNull
@@ -19,5 +25,5 @@ public class AmadeusConfiguration {
 	public void setApiKey(String apiKey) {
 		this.apiKey = apiKey;
 	}
-	
+
 }

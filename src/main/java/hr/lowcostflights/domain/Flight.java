@@ -19,6 +19,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
+/**
+ * Represents a single flight itinerary.
+ * 
+ * @author matko
+ *
+ */
 @Entity
 @Table(name = "flights", uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "origin_id", "destination_id", "departure_datetime", "return_datetime",

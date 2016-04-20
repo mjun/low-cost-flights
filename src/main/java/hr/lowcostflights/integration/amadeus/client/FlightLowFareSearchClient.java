@@ -17,6 +17,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 import hr.lowcostflights.integration.amadeus.AmadeusConfiguration;
 import hr.lowcostflights.integration.amadeus.domain.FlightLowFareSearchResults;
 
+/**
+ * Represents a client which provides client wrapping methods around REST
+ * Amadeus API.
+ * 
+ * @author matko
+ *
+ */
 @Component
 @EnableConfigurationProperties(AmadeusConfiguration.class)
 public class FlightLowFareSearchClient {
@@ -29,40 +36,50 @@ public class FlightLowFareSearchClient {
 			LocalDate returnDate, LocalDateTime arriveBy, LocalDateTime returnBy, Integer adults, Integer children,
 			Integer infants, List<String> includeAirlines, List<String> excludeAirlines, Boolean nonStop,
 			Integer maxPrice, String currency, String travelClass, Integer numberOfResults) {
-		
+
 		MultiValueMap<String, String> urlParameters = new LinkedMultiValueMap<String, String>();
-		
+
 		/* required parameters */
 		urlParameters.add("apikey", amadeusConfiguration.getApiKey());
 		urlParameters.add("origin", origin);
 		urlParameters.add("destination", destination);
 		urlParameters.add("departure_date", departureDate.toString());
-		
+
 		/* optional parameters */
-		if (returnDate != null)			urlParameters.add("return_date", returnDate.toString());
-		if (arriveBy != null) 			urlParameters.add("arrive_by", arriveBy.toString());
-		if (returnBy != null) 			urlParameters.add("return_by", returnBy.toString());
-		if (adults != null) 			urlParameters.add("adults", adults.toString());
-		if (children != null) 			urlParameters.add("children",adults.toString());
-		if (infants != null) 			urlParameters.add("infants", infants.toString());
-		if (includeAirlines != null 
-			&& includeAirlines.size()>0) 
-										urlParameters.add("include_airlines", String.join(",", includeAirlines));
-		if (excludeAirlines != null 
-			&& excludeAirlines.size()>0) 
-										urlParameters.add("exclude_airlines", String.join(",", excludeAirlines));
-		if (nonStop != null) 			urlParameters.add("non-stop", nonStop.toString());
-		if (maxPrice != null) 			urlParameters.add("max_price", maxPrice.toString());
-		if (currency != null) 			urlParameters.add("currency", currency);
-		if (travelClass != null)		urlParameters.add("travel_class", travelClass);
-		if (numberOfResults != null)	urlParameters.add("number_of_results", numberOfResults.toString());
+		if (returnDate != null)
+			urlParameters.add("return_date", returnDate.toString());
+		if (arriveBy != null)
+			urlParameters.add("arrive_by", arriveBy.toString());
+		if (returnBy != null)
+			urlParameters.add("return_by", returnBy.toString());
+		if (adults != null)
+			urlParameters.add("adults", adults.toString());
+		if (children != null)
+			urlParameters.add("children", adults.toString());
+		if (infants != null)
+			urlParameters.add("infants", infants.toString());
+		if (includeAirlines != null && includeAirlines.size() > 0)
+			urlParameters.add("include_airlines", String.join(",", includeAirlines));
+		if (excludeAirlines != null && excludeAirlines.size() > 0)
+			urlParameters.add("exclude_airlines", String.join(",", excludeAirlines));
+		if (nonStop != null)
+			urlParameters.add("non-stop", nonStop.toString());
+		if (maxPrice != null)
+			urlParameters.add("max_price", maxPrice.toString());
+		if (currency != null)
+			urlParameters.add("currency", currency);
+		if (travelClass != null)
+			urlParameters.add("travel_class", travelClass);
+		if (numberOfResults != null)
+			urlParameters.add("number_of_results", numberOfResults.toString());
 
 		UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(resourceUrl).queryParams(urlParameters).build();
-		
+
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
 		restTemplate.setErrorHandler(new AmadeusResponseErrorHandler());
-		FlightLowFareSearchResults results = restTemplate.getForObject(uriComponents.toString(), FlightLowFareSearchResults.class);
+		FlightLowFareSearchResults results = restTemplate.getForObject(uriComponents.toString(),
+				FlightLowFareSearchResults.class);
 		return results;
 	}
 

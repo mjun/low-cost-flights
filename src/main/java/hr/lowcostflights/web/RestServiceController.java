@@ -19,6 +19,15 @@ import hr.lowcostflights.domain.Flight;
 import hr.lowcostflights.service.AirportService;
 import hr.lowcostflights.service.SearchService;
 
+/**
+ * Main application controller which provides REST methods for frontend
+ * application. All REST methods return HTTP status 200 on success, 400 when
+ * supplying invalid input parameters, 500 on all other, server-side related
+ * errors (exceptions).
+ * 
+ * @author matko
+ *
+ */
 @RestController
 public class RestServiceController {
 

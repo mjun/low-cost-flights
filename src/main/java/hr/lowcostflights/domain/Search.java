@@ -23,6 +23,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
+/**
+ * Represents a single unique search event. Each search event is referenced to a
+ * list of flight itineraries through a many-to-many intermediary table
+ * 'flight_search'.
+ * 
+ * @author matko
+ *
+ */
 @Entity
 @Table(name = "searches", uniqueConstraints = { @UniqueConstraint(columnNames = { "origin_id", "destination_id",
 		"departure_date", "return_date", "adults", "children", "infants", "currency" }) })
