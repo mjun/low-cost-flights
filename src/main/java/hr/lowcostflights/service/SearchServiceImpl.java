@@ -51,24 +51,30 @@ public class SearchServiceImpl implements SearchService {
 					origin.getIataCode(), destination.getIataCode(), departureDate, returnDate, null, null, adults,
 					children, infants, null, null, null, null, currency, null, null);
 
-			if (amadeusResults != null) {
+			if (amadeusResults.getResults() != null) {
 				List<Flight> flights = new ArrayList<Flight>();
 
 				for (Result amadeusFlight : amadeusResults.getResults()) {
 					for (Itinerary amadeusItinerary : amadeusFlight.getItineraries()) {
 						Flight flight = flightService.findSpecificFlight(origin, destination,
 								amadeusItinerary.getOutbound().getFlights().get(0).getDepartsAt(),
-								amadeusItinerary.getInbound().getFlights().get(0).getDepartsAt(),
+								(amadeusItinerary.getInbound() != null)
+										? amadeusItinerary.getInbound().getFlights().get(0).getDepartsAt() : null,
 								amadeusItinerary.getOutbound().getFlights().size() - 1,
-								amadeusItinerary.getInbound().getFlights().size() - 1, adults, children, infants,
-								currency, Integer.parseInt(amadeusFlight.getFare().getTotalPrice()));
+								(amadeusItinerary.getInbound() != null)
+										? amadeusItinerary.getInbound().getFlights().size() - 1 : null,
+								adults, children, infants, currency,
+								Double.parseDouble(amadeusFlight.getFare().getTotalPrice()));
 						if (flight == null) {
 							flight = new Flight(origin, destination,
 									amadeusItinerary.getOutbound().getFlights().get(0).getDepartsAt(),
-									amadeusItinerary.getInbound().getFlights().get(0).getDepartsAt(),
+									(amadeusItinerary.getInbound() != null)
+											? amadeusItinerary.getInbound().getFlights().get(0).getDepartsAt() : null,
 									amadeusItinerary.getOutbound().getFlights().size() - 1,
-									amadeusItinerary.getInbound().getFlights().size() - 1, adults, children, infants,
-									currency, Integer.parseInt(amadeusFlight.getFare().getTotalPrice()));
+									(amadeusItinerary.getInbound() != null)
+											? amadeusItinerary.getInbound().getFlights().size() - 1 : null,
+									adults, children, infants, currency,
+									Double.parseDouble(amadeusFlight.getFare().getTotalPrice()));
 						}
 						flights.add(flight);
 					}

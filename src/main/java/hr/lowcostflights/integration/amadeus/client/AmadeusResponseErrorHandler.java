@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AmadeusResponseErrorHandler implements ResponseErrorHandler {
@@ -18,8 +19,13 @@ public class AmadeusResponseErrorHandler implements ResponseErrorHandler {
 	
 	private static class AmadeusErrorResponse {
 		
+		@JsonProperty("status")
 		private Integer status;
+		
+		@JsonProperty("message")
 		private String message;
+		
+		@JsonProperty("more_info")
 		private String moreInfo;
 		
 		@Override

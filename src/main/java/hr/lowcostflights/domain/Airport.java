@@ -8,28 +8,34 @@ import javax.persistence.Table;
 
 import org.springframework.core.style.ToStringCreator;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
-@Table(name="airports")
+@Table(name = "airports")
 public class Airport {
 
 	@Id
 	@GeneratedValue
+	@JsonProperty("id")
 	private Integer id;
-	
-	@Column(name="name", nullable=false, length=255)
+
+	@Column(name = "name", nullable = false, length = 255)
+	@JsonProperty("name")
 	private String name;
-	
-	@Column(name="iata_code", nullable=false, unique=true, length=3)
+
+	@Column(name = "iata_code", nullable = false, unique = true, length = 3)
+	@JsonProperty("iata_code")
 	private String iataCode;
 
-	protected Airport() {}
-	
+	protected Airport() {
+	}
+
 	public Airport(String name, String iataCode) {
 		super();
 		this.name = name;
 		this.iataCode = iataCode;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -62,5 +68,5 @@ public class Airport {
 		builder.append("iataCode", iataCode);
 		return builder.toString();
 	}
-	
+
 }

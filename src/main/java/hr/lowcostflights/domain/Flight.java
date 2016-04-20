@@ -13,6 +13,12 @@ import javax.persistence.UniqueConstraint;
 
 import org.springframework.core.style.ToStringCreator;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 @Entity
 @Table(name = "flights", uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "origin_id", "destination_id", "departure_datetime", "return_datetime",
@@ -21,47 +27,63 @@ public class Flight {
 
 	@Id
 	@GeneratedValue
+	@JsonProperty("id")
 	private Integer id;
 
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonProperty("origin")
 	private Airport origin;
 
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonProperty("destination")
 	private Airport destination;
 
 	@Column(name = "departure_datetime")
+	@JsonProperty("departure_datetime")
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDateTime departureDateTime;
 
 	@Column(name = "return_datetime")
+	@JsonProperty("return_datetime")
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDateTime returnDateTime;
 
 	@Column(name = "outbound_stops")
+	@JsonProperty("outbound_stops")
 	private Integer outboundStops;
 
 	@Column(name = "inbound_stops")
+	@JsonProperty("inbound_stops")
 	private Integer inboundStops;
 
 	@Column(name = "adults")
+	@JsonProperty("adults")
 	private Integer adults;
 
 	@Column(name = "children")
+	@JsonProperty("children")
 	private Integer children;
 
 	@Column(name = "infants")
+	@JsonProperty("infants")
 	private Integer infants;
 
 	@Column(name = "currency")
+	@JsonProperty("currency")
 	private String currency;
 
 	@Column(name = "total_price")
-	private Integer totalPrice;
+	@JsonProperty("total_price")
+	private Double totalPrice;
 
 	protected Flight() {
 	}
 
 	public Flight(Airport origin, Airport destination, LocalDateTime departureDateTime, LocalDateTime returnDateTime,
 			Integer outboundStops, Integer inboundStops, Integer adults, Integer children, Integer infants,
-			String currency, Integer totalPrice) {
+			String currency, Double totalPrice) {
 		super();
 		this.origin = origin;
 		this.destination = destination;
@@ -164,11 +186,11 @@ public class Flight {
 		this.currency = currency;
 	}
 
-	public Integer getTotalPrice() {
+	public Double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(Integer totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 

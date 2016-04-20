@@ -1,7 +1,6 @@
 package hr.lowcostflights.repository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -21,26 +20,27 @@ public class FlightRepositoryTest extends AbstractLowCostFlightsApplicationTest 
 
 	@Autowired
 	private FlightRepository flightRepository;
-	
+
 	@Autowired
 	private AirportRepository airportRepository;
-	
+
 	@Before
 	public void setUp() {
-		List<Airport> aps = new ArrayList<Airport>();
-		aps.add(new Airport("Utirik airport", "-T1"));
-		aps.add(new Airport("Zagreb pleso","-T2"));
-		aps.add(new Airport("Ocean Reef Club Airport","-T3"));
-        airportRepository.save(aps);
-        flightRepository.save(new Flight(aps.get(0), aps.get(1), LocalDateTime.now(), LocalDateTime.now(), 0, 0, 1, 1, 1, "HRK", 123));
-        flightRepository.save(new Flight(aps.get(1), aps.get(2), LocalDateTime.now(), LocalDateTime.now(), 1, 1, 1, 2, 3, "USD", 321));
-        flightRepository.save(new Flight(aps.get(2), aps.get(0), LocalDateTime.now(), LocalDateTime.now(), 2, 0, 3, 2, 1, "EUR", 896));
+		Airport ap1 = airportRepository.findOneByIataCode("IST");
+		Airport ap2 = airportRepository.findOneByIataCode("BOS");
+		Airport ap3 = airportRepository.findOneByIataCode("ZAG");
+		flightRepository
+				.save(new Flight(ap1, ap2, LocalDateTime.now(), LocalDateTime.now(), 0, 0, 1, 1, 1, "HRK", 123.0));
+		flightRepository
+				.save(new Flight(ap2, ap3, LocalDateTime.now(), LocalDateTime.now(), 1, 1, 1, 2, 3, "USD", 321.0));
+		flightRepository
+				.save(new Flight(ap3, ap2, LocalDateTime.now(), LocalDateTime.now(), 2, 0, 3, 2, 1, "EUR", 896.0));
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
-	
+
 	@Test
 	public void testFindAll() {
 		List<Flight> fs = (List<Flight>) flightRepository.findAll();

@@ -17,6 +17,12 @@ import javax.persistence.UniqueConstraint;
 
 import org.springframework.core.style.ToStringCreator;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 @Entity
 @Table(name = "searches", uniqueConstraints = { @UniqueConstraint(columnNames = { "origin_id", "destination_id",
 		"departure_date", "return_date", "adults", "children", "infants", "currency" }) })
@@ -24,30 +30,43 @@ public class Search {
 
 	@Id
 	@GeneratedValue
+	@JsonProperty("id")
 	private Integer id;
 
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonProperty("origin")
 	private Airport origin;
 
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonProperty("destination")
 	private Airport destination;
 
 	@Column(name = "departure_date")
+	@JsonProperty("departure_date")
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDate departureDate;
 
 	@Column(name = "return_date")
+	@JsonProperty("return_date")
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDate returnDate;
 
 	@Column(name = "adults")
+	@JsonProperty("adults")
 	private Integer adults;
 
 	@Column(name = "children")
+	@JsonProperty("children")
 	private Integer children;
 
 	@Column(name = "infants")
+	@JsonProperty("infants")
 	private Integer infants;
 
 	@Column(name = "currency")
+	@JsonProperty("currency")
 	private String currency;
 
 	@ManyToMany(cascade = CascadeType.ALL)

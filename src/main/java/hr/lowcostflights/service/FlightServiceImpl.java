@@ -18,7 +18,7 @@ public class FlightServiceImpl implements FlightService {
 	@Override
 	public Flight findSpecificFlight(Airport origin, Airport destination, LocalDateTime departureDateTime,
 			LocalDateTime returnDateTime, Integer outboundStops, Integer inboundStops, Integer adults, Integer children,
-			Integer infants, String currency, Integer totalPrice) {
+			Integer infants, String currency, Double totalPrice) {
 		return flightRepository
 				.findOneByOriginAndDestinationAndDepartureDateTimeAndReturnDateTimeAndOutboundStopsAndInboundStopsAndAdultsAndChildrenAndInfantsAndCurrencyAndTotalPrice(
 						origin, destination, departureDateTime, returnDateTime, outboundStops, inboundStops, adults,

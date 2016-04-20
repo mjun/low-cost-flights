@@ -19,7 +19,7 @@ public class FlightLowFareSearchClientTest extends AbstractLowCostFlightsApplica
 	public void testFlightLowFareSearch() {
 		FlightLowFareSearchResults results = flightLowFareSearchClient.flightLowFareSearch("BOS", "LOS", LocalDate.now(), null, null, null, null, null, null, null, null, null, null, null, null, 5);
 	
-		Assert.assertNotNull("failure - expected not null", results);
+		Assert.assertNotNull("failure - expected not null", results.getResults());
 	}
 
 }
