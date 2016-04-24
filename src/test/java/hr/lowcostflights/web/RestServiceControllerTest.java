@@ -50,7 +50,7 @@ public class RestServiceControllerTest extends AbstractLowCostFlightsControllerT
 	@Test
 	public void testSearch() throws Exception {
 		String uri = "/search?origin=IST&destination=BOS&departure=" + LocalDate.now().plusDays(1).toString()
-				+ "&currency=USD";
+				+ "&currency=USD&adults=1";
 
 		MvcResult result = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON)).andReturn();
 

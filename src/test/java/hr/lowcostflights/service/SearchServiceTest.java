@@ -25,11 +25,11 @@ public class SearchServiceTest extends AbstractLowCostFlightsApplicationTest {
 
 	@Test
 	public void testFindFlights() {
-		Airport origin = airportRepository.findOneByIataCode("IST");
-		Airport destination = airportRepository.findOneByIataCode("BOS");
+		Airport origin = airportRepository.findOneByIataCode("BOS");
+		Airport destination = airportRepository.findOneByIataCode("LOS");
 
 		List<Flight> fs = searchService.findFlights(origin, destination, LocalDate.now().plusDays(1),
-				null, null, null, null, "USD");
+				null, 1, null, null, "USD");
 
 		Assert.assertNotNull("failure - expected not null", fs);
 	}
