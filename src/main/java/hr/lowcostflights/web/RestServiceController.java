@@ -105,13 +105,13 @@ public class RestServiceController {
 							"Number of adult passengers should be integer with value 0 or greater"));
 		}
 
-		if (adults != null && children < 0) {
+		if (children != null && children < 0) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new RestErrorResponse(HttpStatus.BAD_REQUEST.value(),
 							"Number of children passengers should be integer with value 0 or greater"));
 		}
 
-		if (adults != null && infants < 0) {
+		if (infants != null && infants < 0) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new RestErrorResponse(HttpStatus.BAD_REQUEST.value(),
 							"Number of infant passengers should be integer with value 0 or greater"));
@@ -156,7 +156,8 @@ public class RestServiceController {
 	}
 
 	@RequestMapping(value = "/airport/find", method = RequestMethod.GET)
-	public ResponseEntity<?> findAirports(@RequestParam(value = "name") String name) {
+	public ResponseEntity<?> findAirports(@RequestParam(value = "name") String name,
+			@RequestParam(value = "limit", required = false) Integer limit) {
 		if (name == null || name.length() < 3) {
 			// Bad request
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -164,7 +165,12 @@ public class RestServiceController {
 							"Airport name or part of airport name should be at least 3 letters long"));
 		}
 		try {
-			List<Airport> aps = airportService.findByName(name);
+			List<Airport> aps;
+			if (limit != null && limit > 0) {
+				aps = airportService.findByName(name, limit);
+			} else {
+				aps = airportService.findByName(name);
+			}
 			return ResponseEntity.ok(aps);
 		} catch (Exception ex) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

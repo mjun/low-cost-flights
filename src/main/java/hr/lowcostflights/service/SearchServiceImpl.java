@@ -16,6 +16,7 @@ import hr.lowcostflights.integration.amadeus.client.FlightLowFareSearchClient;
 import hr.lowcostflights.integration.amadeus.domain.FlightLowFareSearchResults;
 import hr.lowcostflights.integration.amadeus.domain.Itinerary;
 import hr.lowcostflights.integration.amadeus.domain.Result;
+import hr.lowcostflights.repository.FlightRepository;
 import hr.lowcostflights.repository.SearchRepository;
 
 @Service
@@ -23,6 +24,9 @@ public class SearchServiceImpl implements SearchService {
 
 	@Autowired
 	private SearchRepository searchRepository;
+	
+	@Autowired
+	private FlightRepository flightRepository;
 
 	@Autowired
 	private FlightLowFareSearchClient amadeusflightLowFareSearchClient;
@@ -35,6 +39,17 @@ public class SearchServiceImpl implements SearchService {
 	public List<Flight> findFlights(Airport origin, Airport destination, LocalDate departureDate, LocalDate returnDate,
 			Integer adults, Integer children, Integer infants, String currency) {
 
+		// treat passenger null values as 0 value integers
+		if (adults == null) {
+			adults = 0;
+		}
+		if (children == null) {
+			children = 0;
+		}
+		if (infants == null) {
+			infants = 0;
+		}
+		
 		// see if there already was a search with these parameters
 		Search search = searchRepository
 				.findOneByOriginAndDestinationAndDepartureDateAndReturnDateAndAdultsAndChildrenAndInfantsAndCurrency(
@@ -75,6 +90,7 @@ public class SearchServiceImpl implements SearchService {
 											? amadeusItinerary.getInbound().getFlights().size() - 1 : null,
 									adults, children, infants, currency,
 									Double.parseDouble(amadeusFlight.getFare().getTotalPrice()));
+							flightRepository.save(flight);
 						}
 						flights.add(flight);
 					}

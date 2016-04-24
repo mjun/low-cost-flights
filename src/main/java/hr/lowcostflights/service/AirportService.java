@@ -10,4 +10,6 @@ public interface AirportService {
 	
 	public List<Airport> findByName(String name);
 	
+	public List<Airport> findByName(String name, Integer limit);
+	
 }
